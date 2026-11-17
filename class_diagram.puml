@@ -1,0 +1,116 @@
+@startuml class diagram
+title Test case liberator
+
+skinparam ClassAttributeIconSize 0
+
+class App{
+    - __dialog: TestCaseDialog
+    - __service: TestCaseService
+    - __repository: TestCaseRepository
+    main() : None
+}
+
+class TestCase{
+    +TestCaseId: uuid4
+    +TestCaseTc_id: string
+    +TestCaseTitle: string
+    +TestCasePurpose: string
+    +TestCaseAcceptanceCriteria: string
+    +TestCasePrecondition: Precondition[1..*]
+    +TestCaseTestData: TestData[1..*]
+    +TestCaseStep: Step[1..*]
+    +TestCaseExpectedResult: string
+    +Create() : TestCase
+    +AddPrediction(): Prediciton[1..*]
+    +AddTestData(): TestData[1..*]
+    +AddStep(): Step[1..*]
+}
+
+class Precondition {
+    +id: integer
+    +criteria: string
+}
+
+class Step{
+    +id: integer
+    +instructions: string
+} 
+
+class TestData{
+    +key: string
+    +value: string
+}
+
+class TestCaseService{
+    -repository: __cases | TestCase[0..*]
+    +CreateTestCase (test_case : CreateTestCaseDto)| CreateTestCaseResult
+    +GetTestCases () : GetTestCaseResult
+    +GetTestCasesByIndex(index) :TestCase[0..*]
+}
+
+class CreateTestCaseResult{
+    +succeded: boolean
+    +message: string | Void
+    +test_case: TestCase | Void
+}
+
+class GetTestCaseResult{
+    +succeded: boolean
+    +message: string | Void
+    +test_cases: TestCase[0..*] | Void
+}
+
+class TestCaseRepository{
+    - __cases: TestCase[0..*]
+    +TryCreateTestCase (test_case : TestCase) | Void
+    +GetAllTestCases () : TestCase[0..*]
+}
+
+class TestCaseDialog{
+    +MainMenu ():| Void
+    +CreateTestCaseMenu ():| Void
+    +ShowTestCases (): |Void
+    +GetTestCasesByIndex () :|Void
+}
+
+class CreateTestCaseDto{
+    +TestCaseTc_id: string
+    +TestCaseTitle: string
+    +TestCasePurpose: string
+    +TestCaseAcceptanceCriteria: string
+    +TestCasePreconditions: Preconditions[1..*]
+    +TestCaseTestData: TestData[1..*]
+    +TestCaseSteps: Steps[1..*]
+    +TestCaseExpectedResult: string
+}
+
+class ConsoleHelper{
+    +clear_screen () | Void
+    +pause () | Void
+    +required_input () | Void
+}
+
+App ..> TestCaseService: <<uses>>
+App ..> TestCaseDialog: <<uses>>
+App ..> TestCaseRepository: <<uses>>
+
+TestCaseService ..> TestCaseRepository: <<uses>>
+TestCaseService ..> CreateTestCaseResult: <<uses>>
+TestCaseService ..> GetTestCaseResult: <<uses>>
+TestCaseService ..> TestCaseDialog: <<uses>>
+TestCaseService ..> CreateTestCaseDto: <<uses>>
+
+TestCaseRepository ..> TestCase: <<uses>>
+
+CreateTestCaseResult ..> TestCase: <<uses>>
+
+GetTestCaseResult ..>TestCase: <<uses>>
+
+TestCaseDialog ..> TestCase: <<uses>>
+TestCaseDialog ..> ConsoleHelper: <<uses>>
+
+TestCase ..> Step: <<uses>>
+TestCase ..> Precondition: <<uses>>
+TestCase ..> TestData: <<uses>>
+
+@enduml
