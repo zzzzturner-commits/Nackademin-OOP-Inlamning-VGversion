@@ -26,7 +26,7 @@ Programmet är uppbyggt med en uppdelning mellan användargränssnitt, servicela
 
 ### Design reflektion:
 
-I början av utvecklingen gjordes valet att dela upp funktionaliteten i olika filer och mappar för att skapa en tydlig struktur som är i enighet med single responsible principle. Var sak har sitt ansvarsområde.
+I början av utvecklingen gjordes valet att dela upp funktionaliteten i olika filer och mappar för att skapa en tydlig struktur som är i enighet med single responsible principle. Var sak har sitt ansvarsområde, som i sin tur påverkar systemets läsbarhet, underhållbarhet och testbarhet positivt.
 
 **Diagrams** innehåller klass, aktivitets- och sekvensdiagram som tillhör systemet.
 
