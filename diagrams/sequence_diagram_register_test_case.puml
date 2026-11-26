@@ -1,0 +1,121 @@
+@startuml sequence diagram
+title Sekvensdiagram - Registrera testfall
+
+autonumber
+
+actor Användare
+participant TestCaseDialog
+participant ConsoleHelper
+participant CreateTestCaseDto
+participant TestCaseService
+participant TestCase
+participant TestCaseRepository
+participant CreateTestCaseResult
+
+== Initiering ==
+
+Användare -> TestCaseDialog: Väljer alternativ 1
+activate TestCaseDialog
+
+TestCaseDialog -> TestCaseDialog: create_test_case_menu()
+create CreateTestCaseDto
+TestCaseDialog -> CreateTestCaseDto: __init__()
+
+== Insamling av indata ==
+
+loop För varje obligatoriskt fält (8 fält)
+    TestCaseDialog -> ConsoleHelper: required_input(prompt)
+    activate ConsoleHelper
+
+    loop Så länge inmatningen är tom
+        ConsoleHelper -> Användare: Begär inmatning
+        Användare --> ConsoleHelper: Anger värde
+
+        ConsoleHelper -> ConsoleHelper: strip()
+
+        alt Inmatningen är tom
+            ConsoleHelper -> Användare: Visa felmeddelande
+            ConsoleHelper -> Användare: Begär ny inmatning
+        else Inmatningen innehåller information
+            ConsoleHelper -> ConsoleHelper: Returnera normaliserat värde
+        end
+    end
+
+    ConsoleHelper --> TestCaseDialog: Returnerar värde
+    deactivate ConsoleHelper
+
+    TestCaseDialog -> CreateTestCaseDto: Tilldela fältets värde
+end
+
+note over TestCaseDialog, CreateTestCaseDto
+Fälten som samlas in:
+tc_id, title, purpose,
+acceptance_criteria, preconditions,
+test_data, steps och expected_result.
+end note
+
+== Validering, Normalisering och registrering ==
+
+TestCaseDialog -> TestCaseService: create_test_case(dto)
+activate TestCaseService
+
+TestCaseService -> TestCaseService: Normalisera obligatoriska fält separat (.strip())
+
+TestCaseService -> TestCaseService: Validera obligatoriska fält separat
+
+note right of TestCaseService
+Kontrollerar varje fält med en separat if-sats.
+Vid första underkända kontroll returneras
+ett felresultat direkt.
+end note
+
+alt Något obligatoriskt fält saknas
+
+    create CreateTestCaseResult
+    TestCaseService -> CreateTestCaseResult: __init__(False, message, None)
+    TestCaseService --> TestCaseDialog: Returnera resultat
+    deactivate TestCaseService
+
+    TestCaseDialog -> Användare: Visa result.message
+    TestCaseDialog -> ConsoleHelper: pause()
+    activate ConsoleHelper
+    ConsoleHelper -> Användare: Vänta på användarens inmatning
+    Användare --> ConsoleHelper: Bekräftelse
+    ConsoleHelper --> TestCaseDialog: Fortsätt
+    deactivate ConsoleHelper
+
+    TestCaseDialog -> TestCaseDialog: Återgå till huvudmenyn
+
+else Samtliga fält godkända
+
+    create TestCase
+    TestCaseService -> TestCase: __init__()
+    TestCaseService -> TestCase: create(dto)
+    TestCase --> TestCaseService: Returnera TestCase-objekt
+
+    TestCaseService -> TestCaseRepository: try_create_test_case(test_case)
+    activate TestCaseRepository
+    TestCaseRepository -> TestCaseRepository: Lägg till objektet i interna listan
+    TestCaseRepository --> TestCaseService: Returnera
+    deactivate TestCaseRepository
+
+    create CreateTestCaseResult
+    TestCaseService -> CreateTestCaseResult: __init__(True, message, test_case)
+    TestCaseService --> TestCaseDialog: Returnera resultat
+    deactivate TestCaseService
+
+    TestCaseDialog -> Användare: Visa result.message
+    TestCaseDialog -> ConsoleHelper: pause()
+    activate ConsoleHelper
+    ConsoleHelper -> Användare: Vänta på användarens inmatning
+    Användare --> ConsoleHelper: Bekräftelse
+    ConsoleHelper --> TestCaseDialog: Fortsätt
+    deactivate ConsoleHelper
+
+    TestCaseDialog -> TestCaseDialog: Återgå till huvudmenyn
+
+end
+
+deactivate TestCaseDialog
+
+@enduml
