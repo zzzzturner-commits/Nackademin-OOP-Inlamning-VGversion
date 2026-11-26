@@ -44,46 +44,48 @@ I början av utvecklingen gjordes valet att dela upp funktionaliteten i olika fi
 
 **Main** innehåller programmets startpunkt.
 
-
 ### Mappstruktur:
+
+```
 Test Case Liberator/
 |
-|----diagrams
-|   |--activity_diagram_register_test_case_detailed.puml
-|   |--activity_diagram_register_test_case_simple.puml
-|   |--class_diagram_test_case_liberator_new.puml
-|   |--class_diagram_test_case_liberator_old.puml
-|   |--sequence_diagram_register_test_case.puml
+|── main.py
 |
-|----dialogs/
-|   |--tc_dialog.py
-|
-|----models/
-|   |--tc_create_test_case_dto.py
-|   |--tc_create_test_case_result.py
-|   |--tc_get_test_case_result.py
-|   |--tc_precondition.py
-|   |--tc_step.py
-|   |--tc_test_case.py
-|   |--tc_test_data.py
-|
-|----repository/
-|   |--tc_repository.py
-|
-|----services/   
-|   |--tc_service.py
-|
-|----tests/
-|   |--conftest.py
-|   |--test_tc_dialog_and_tc_console_helper.py
-|   |--test_tc_repository.py
-|   |--test_tc_service.py
-|   |--test_tc_test_case_and_dto.py
-|
-|----utils/
-|   |--tc_console_helper.py
-|
-|--main.py
+├── diagrams/
+│   ├── activity_diagram_register_test_case_detailed.puml
+│   ├── activity_diagram_register_test_case_simple.puml
+│   ├── class_diagram_test_case_liberator_new.puml
+│   ├── class_diagram_test_case_liberator_old.puml
+│   └── sequence_diagram_register_test_case.puml
+│
+├── dialogs/
+│   └── tc_dialog.py
+│
+├── models/
+│   ├── tc_create_test_case_dto.py
+│   ├── tc_create_test_case_result.py
+│   ├── tc_get_test_case_result.py
+│   ├── tc_precondition.py
+│   ├── tc_step.py
+│   ├── tc_test_case.py
+│   └── tc_test_data.py
+│
+├── repository/
+│   └── tc_repository.py
+│
+├── services/
+│   └── tc_service.py
+│
+├── tests/
+│   ├── conftest.py
+│   ├── test_tc_dialog_and_tc_console_helper.py
+│   ├── test_tc_repository.py
+│   ├── test_tc_service.py
+│   └── test_tc_test_case_and_dto.py
+│
+├── utils/
+│   └── tc_console_helper.py
+```
 
 ### Funktionalitet:
 
